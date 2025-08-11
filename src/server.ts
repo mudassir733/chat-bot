@@ -1,4 +1,5 @@
 import { app } from "./app";
+import { connectToDb } from "./config/db";
 
 
 
@@ -6,12 +7,12 @@ const startServer = async () => {
     try {
 
         // connect with dp
-
+        connectToDb();
 
         // start server
         const server = app.listen(process.env.PORT, () => {
             console.log(`Server running on port ${process.env.PORT}`);
-        })
+        });
 
 
         server.on('error', (error: NodeJS.ErrnoException) => {

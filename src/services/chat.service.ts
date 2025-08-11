@@ -3,7 +3,7 @@ import { GoogleGenAI } from "@google/genai";
 
 const genAI = new GoogleGenAI({
     apiKey: process.env.GEMINI_API_KEY,
-  });
+});
 
 export const chatService = async (userMessage: string) => {
 
@@ -15,7 +15,6 @@ export const chatService = async (userMessage: string) => {
   });
 
   const text = response.text ?? "";
-
 
   chatHistory.push({ role: "assistant", content: text });
 
