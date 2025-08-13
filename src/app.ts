@@ -5,6 +5,7 @@ dotenv.config();
 
 // routers
 import router from './routes/chat.route';
+import authRouter from './routes/auth/auth.route';
 
 
 const app = express();
@@ -17,7 +18,8 @@ app.use(cors({
 
 app.use(express.json());
 
-app.use("/api", router);
+app.use('/api', router);
+app.use('/auth', authRouter);
 
 
 // app.use("/api", require("./routes/chat.route").default);
