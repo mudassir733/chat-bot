@@ -4,5 +4,25 @@ export class CustomError extends Error {
     constructor(message: string, statusCode: number) {
         super(message);
         this.statusCode = statusCode;
+        Object.setPrototypeOf(this, new.target.prototype)
+        Error.captureStackTrace(this, this.constructor);
+
+    }
+}
+
+export class ValidationError extends CustomError {
+    constructor(message: string) {
+        super(message, 400)
+    }
+}
+export class ConflictError extends CustomError {
+    constructor(message: string) {
+        super(message, 409)
+    }
+}
+
+export class ServerError extends CustomError {
+    constructor(message: string) {
+        super(message, 500)
     }
 }

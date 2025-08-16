@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import authService from "../../services/auth/auth.service";
-import createError from "http-errors"
+import { CustomError } from "../../utils/custom_errors/api.error";
+
 
 
 export default {
@@ -10,13 +11,18 @@ export default {
             const response = await authService.register(email, password, username);
             return res.json({
                 data: {
-                    username: response.username,
-                    email: response.email
+                    id: response.id,
+                    email: response.email,
+                    username: response.username
                 },
                 status: 201
             });
         } catch (error: any) {
-            res.status(400).json({ error: error.message });
+            if (error instanceof CustomError) {
+                res.status(error.statusCode).json({ message: error.message });
+
+            }
+            res.status(500).json({ message: "internal server error" });
         }
     }
 }
