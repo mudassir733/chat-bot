@@ -22,7 +22,7 @@ export default {
                 res.status(error.statusCode).json({ message: error.message });
 
             }
-            res.status(500).json({ message: "internal server error" });
+            next(error.message);
         }
     }
 }

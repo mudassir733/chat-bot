@@ -2,7 +2,14 @@ import { prisma } from "../../config/db";
 import { ConflictError, CustomError, ValidationError } from "../../utils/custom_errors/api.error";
 import { Worker } from "node:worker_threads";
 import path from "node:path";
+import { equal } from "node:assert";
 
+
+interface UserData {
+    username: string;
+    email: string;
+    password: string;
+}
 
 
 export default {
@@ -12,13 +19,18 @@ export default {
                 throw new ValidationError('Email and Password are required');
             }
 
-            // existing user
-            const existing_User = await prisma.user.findMany({
-                where: { email: email }
-            });
-            console.log("Existing", existing_User);
 
-            if (existing_User) {
+            // existing user
+            const existing_email = await prisma.user.findFirst({
+                where: {
+                    email: {
+                        equals: email,
+                        mode: 'insensitive'
+                    }
+                }
+            });
+
+            if (existing_email) {
                 throw new ConflictError("User with this email already exist");
             }
 
