@@ -15,6 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = require("../../config/db");
 const api_error_1 = require("../../utils/custom_errors/api.error");
 const node_worker_threads_1 = require("node:worker_threads");
+const jwt_1 = require("../../utils/jwt");
+const bcrypt_1 = __importDefault(require("bcrypt"));
 const node_path_1 = __importDefault(require("node:path"));
 exports.default = {
     register(username, email, password) {
@@ -24,11 +26,15 @@ exports.default = {
                     throw new api_error_1.ValidationError('Email and Password are required');
                 }
                 // existing user
-                const existing_User = yield db_1.prisma.user.findMany({
-                    where: { email: email }
+                const existing_email = yield db_1.prisma.user.findFirst({
+                    where: {
+                        email: {
+                            equals: email,
+                            mode: 'insensitive'
+                        }
+                    }
                 });
-                console.log("Existing", existing_User);
-                if (existing_User) {
+                if (existing_email) {
                     throw new api_error_1.ConflictError("User with this email already exist");
                 }
                 const hash = yield this.hashPasswordInWorker(password);
@@ -43,7 +49,32 @@ exports.default = {
                 return user;
             }
             catch (error) {
-                throw new api_error_1.CustomError('User creation failed', 500);
+                throw new api_error_1.CustomError(error.message, error.statusCode);
+            }
+        });
+    },
+    login(email, password) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const user = yield db_1.prisma.user.findFirst({
+                    where: { email: email }
+                });
+                if (!user) {
+                    throw new api_error_1.NotFoundError('User not found in this email');
+                }
+                const isMatch = yield bcrypt_1.default.compare(password, user.password);
+                if (!isMatch) {
+                    throw new api_error_1.UnAuthorized('Invalid credentials');
+                }
+                const accessToken = (0, jwt_1.generateToken)(user.id, user.email);
+                console.log("Access Token", accessToken);
+                return {
+                    user,
+                    accessToken
+                };
+            }
+            catch (error) {
+                throw new api_error_1.CustomError(error.message, error.statusCode);
             }
         });
     },

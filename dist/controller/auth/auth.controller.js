@@ -22,9 +22,7 @@ exports.default = {
                 const response = yield auth_service_1.default.register(email, password, username);
                 return res.json({
                     data: {
-                        id: response.id,
-                        email: response.email,
-                        username: response.username
+                        response
                     },
                     status: 201
                 });
@@ -33,8 +31,27 @@ exports.default = {
                 if (error instanceof api_error_1.CustomError) {
                     res.status(error.statusCode).json({ message: error.message });
                 }
-                console.error('Unexpected error:', error);
-                res.status(500).json({ message: "internal server error" });
+                next(error.message);
+            }
+        });
+    },
+    login(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { email, password } = req.body;
+                const response = yield auth_service_1.default.login(email, password);
+                return res.json({
+                    data: {
+                        response
+                    },
+                    status: 200
+                });
+            }
+            catch (error) {
+                if (error instanceof api_error_1.CustomError) {
+                    res.status(error.statusCode).json({ message: error.message });
+                }
+                next(error.message);
             }
         });
     }
