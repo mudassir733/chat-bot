@@ -26,3 +26,15 @@ export class ServerError extends CustomError {
         super(message, 500)
     }
 }
+
+export class NotFoundError extends CustomError {
+    constructor(message: string) {
+        super(message, 404)
+    }
+}
+
+export class UnAuthorized extends CustomError {
+    constructor(message: string) {
+        super(message, 401)
+    }
+}

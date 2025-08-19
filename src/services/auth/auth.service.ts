@@ -1,15 +1,11 @@
 import { prisma } from "../../config/db";
-import { ConflictError, CustomError, ValidationError } from "../../utils/custom_errors/api.error";
+import { ConflictError, CustomError, ValidationError, NotFoundError, UnAuthorized } from "../../utils/custom_errors/api.error";
 import { Worker } from "node:worker_threads";
+import { generateToken } from "../../utils/jwt";
+import bcrypt from "bcrypt"
 import path from "node:path";
-import { equal } from "node:assert";
 
 
-interface UserData {
-    username: string;
-    email: string;
-    password: string;
-}
 
 
 export default {
@@ -18,7 +14,6 @@ export default {
             if (!email || !password) {
                 throw new ValidationError('Email and Password are required');
             }
-
 
             // existing user
             const existing_email = await prisma.user.findFirst({
@@ -35,7 +30,6 @@ export default {
             }
 
             const hash = await this.hashPasswordInWorker(password);
-            console.log("Hash", hash)
             const user = await prisma.user.create({
                 data: {
                     username: username,
@@ -49,6 +43,35 @@ export default {
 
         }
 
+    },
+
+    async login(email: string, password: string) {
+        try {
+
+            const user = await prisma.user.findFirst({
+                where: { email: email }
+            })
+            if (!user) {
+                throw new NotFoundError('User not found in this email');
+            }
+
+            const isMatch = await bcrypt.compare(password, user.password);
+            if (!isMatch) {
+                throw new UnAuthorized('Invalid credentials')
+            }
+
+
+            const accessToken = generateToken(user.id, user.email);
+
+            return {
+                user,
+                accessToken
+            }
+
+        } catch (error: any) {
+            throw new CustomError(error.message, error.statusCode)
+
+        }
     },
 
     async hashPasswordInWorker(password: string): Promise<string> {
