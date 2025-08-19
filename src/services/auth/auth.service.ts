@@ -7,7 +7,6 @@ import path from "node:path";
 
 
 
-
 export default {
     async register(username: string, email: string, password: string) {
         try {
@@ -28,6 +27,7 @@ export default {
             if (existing_email) {
                 throw new ConflictError("User with this email already exist");
             }
+            const accessToken = generateToken(email);
 
             const hash = await this.hashPasswordInWorker(password);
             const user = await prisma.user.create({
@@ -37,7 +37,10 @@ export default {
                     password: hash
                 }
             });
-            return user;
+            return {
+                user,
+                accessToken
+            };
         } catch (error: any) {
             throw new CustomError(error.message, error.statusCode);
 
@@ -61,7 +64,7 @@ export default {
             }
 
 
-            const accessToken = generateToken(user.id, user.email);
+            const accessToken = generateToken(user.email);
 
             return {
                 user,

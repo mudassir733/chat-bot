@@ -12,9 +12,11 @@ export default {
             console.log("RES", user);
             return res.json({
                 data: {
-                    id: user.id,
-                    username: user.username,
-                    email: user.email
+                    id: user.user.id,
+                    username: user.user.username,
+                    email: user.user.email,
+                    accessToken: user.accessToken,
+                    createdAt: user.user.createdAt
                 },
                 status: 201
             });
