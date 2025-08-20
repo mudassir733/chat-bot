@@ -16,9 +16,27 @@ export default {
                 res.status(error.statusCode).json({ message: error.message });
 
             }
-            next(error.message)
+            next(error.message);
 
         }
 
+    },
+
+    async getChatList(req: Request, res: Response, next: NextFunction) {
+        try {
+            const userId = req.params.id;
+            const data = await chatListService.getChatList(userId);
+            return res.json({
+                data,
+                status: 200,
+                message: 'Chat list fetch successfully'
+            });
+        } catch (error: any) {
+            if (error instanceof CustomError) {
+                res.status(error.statusCode).json({ message: error.message });
+
+            }
+            next(error.message);
+        }
     }
 }

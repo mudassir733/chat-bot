@@ -6,8 +6,7 @@ export default {
 
         try {
             if (!userId) {
-                throw new ValidationError('User is missing');
-
+                throw new ValidationError('User id is missing');
             }
             const user = await prisma.user.findFirst({
                 select: {
@@ -26,11 +25,40 @@ export default {
                     updatedAt: new Date()
                 }
             });
-
             return chat;
         } catch (error: any) {
             throw new CustomError(error.message, error.statusCode);
 
+        }
+
+    },
+    async getChatList(userId: string) {
+        try {
+            if (!userId) {
+                throw new ValidationError('User id is missing!');
+            }
+
+            const user = await prisma.user.findFirst({
+                select: {
+                    id: true,
+                    username: true
+                }
+            });
+            if (!user) {
+                throw new NotFoundError('User not found!')
+
+            }
+
+            const chat = await prisma.chatList.findMany({
+                where: {
+                    userId: user?.id,
+                    username: user?.username
+                }
+            })
+
+            return chat;
+        } catch (error: any) {
+            throw new CustomError(error.message, error.statusCode);
         }
 
     }
