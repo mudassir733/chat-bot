@@ -14,9 +14,20 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  username  String
-  email     String   @unique
+  id        Int        @id @default(autoincrement())
+  username  String     @unique()
+  email     String     @unique
   password  String
+  createdAt DateTime   @default(now())
+  ChatList  ChatList[]
+}
+
+model ChatList {
+  id        Int      @id @default(autoincrement())
+  listName  String?  @default("new chat")
+  username  String?
+  User      User?    @relation(fields: [userId], references: [id])
+  userId    Int?
   createdAt DateTime @default(now())
+  updatedAt DateTime
 }

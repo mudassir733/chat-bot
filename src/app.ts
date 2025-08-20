@@ -6,6 +6,7 @@ dotenv.config();
 // routers
 import router from './routes/chat.route';
 import authRouter from './routes/auth/auth.route';
+import chatListRouter from './routes/chatList/chatList.route';
 
 
 const app = express();
@@ -20,6 +21,7 @@ app.use(express.json());
 
 app.use('/api', router);
 app.use('/auth', authRouter);
+app.use('/api', chatListRouter);
 
 
 // app.use("/api", require("./routes/chat.route").default);
