@@ -52,5 +52,22 @@ export default {
             next(error.message);
 
         }
+    },
+    async isAuthenticated(res: Response, req: Request, next: NextFunction) {
+        if (req.isAuthenticated()) return next();
+        res.redirect('/');
+    },
+
+
+    async loginSuccess(req: Request, res: Response) {
+        res.json({
+            message: 'Login successful',
+            user: req.user,
+        });
+    },
+
+    async logoutUser(req: Request, res: Response) {
+        req.logout(() => res.redirect('/'));
     }
+
 }

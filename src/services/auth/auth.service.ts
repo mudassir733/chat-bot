@@ -34,7 +34,8 @@ export default {
                 data: {
                     username: username,
                     email: email,
-                    password: hash
+                    password: hash,
+                    googleId: ''
                 }
             });
             return {
@@ -101,5 +102,5 @@ export default {
                     reject(new Error(`Worker stopped with exit code ${code}`));
             });
         });
-    }
+    },
 }

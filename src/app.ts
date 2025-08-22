@@ -1,6 +1,8 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import session from "express-session";
+import './config/passport';
 dotenv.config();
 
 // routers
@@ -15,6 +17,13 @@ const app = express();
 app.use(cors({
     origin: 'http://localhost:3000',
     methods: ["GET", "POST", 'PUT', 'DELETE']
+}));
+
+app.use(session({
+    secret: `${process.env.SESSION_SECRET}`,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { maxAge: 60000 }
 }));
 
 app.use(express.json());

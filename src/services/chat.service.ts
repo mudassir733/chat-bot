@@ -2,7 +2,7 @@ import { chatHistory } from "../models/chat.model";
 import { GoogleGenAI } from "@google/genai";
 
 const genAI = new GoogleGenAI({
-    apiKey: process.env.GEMINI_API_KEY,
+  apiKey: process.env.GEMINI_API_KEY,
 });
 
 export const chatService = async (userMessage: string) => {

@@ -33,8 +33,8 @@ passport.use(
 
                 return done(null, newUser);
 
-            } catch (error) {
-                return done(error);
+            } catch (error: any) {
+                return done(null, error.message);
 
             }
         }
