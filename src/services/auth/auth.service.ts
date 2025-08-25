@@ -1,9 +1,9 @@
-import { prisma } from "../../config/db";
-import { ConflictError, CustomError, ValidationError, NotFoundError, UnAuthorized } from "../../utils/custom_errors/api.error";
-import { Worker } from "node:worker_threads";
-import { generateToken } from "../../utils/jwt";
-import bcrypt from "bcrypt"
-import path from "node:path";
+import { prisma } from '../../config/db';
+import { ConflictError, CustomError, ValidationError, NotFoundError, UnAuthorized } from '../../utils/custom_errors/api.error';
+import { Worker } from 'node:worker_threads';
+import { generateToken } from '../../utils/jwt';
+import bcrypt from 'bcrypt';
+import path from 'node:path';
 
 
 
@@ -25,7 +25,7 @@ export default {
             });
 
             if (existing_email) {
-                throw new ConflictError("User with this email already exist");
+                throw new ConflictError('User with this email already exist');
             }
             const accessToken = generateToken(email);
 
@@ -42,11 +42,10 @@ export default {
                 user,
                 accessToken
             };
-        } catch (error: any) {
-            throw new CustomError(error.message, error.statusCode);
-
+        } catch (error: unknown) {
+            const err = error as CustomError;
+            throw new CustomError(err.message, err.statusCode);
         }
-
     },
 
     async login(email: string, password: string) {
@@ -54,14 +53,14 @@ export default {
 
             const user = await prisma.user.findFirst({
                 where: { email: email }
-            })
+            });
             if (!user) {
                 throw new NotFoundError('User not found in this email');
             }
 
             const isMatch = await bcrypt.compare(password, user.password);
             if (!isMatch) {
-                throw new UnAuthorized('Invalid credentials')
+                throw new UnAuthorized('Invalid credentials');
             }
 
 
@@ -70,11 +69,11 @@ export default {
             return {
                 user,
                 accessToken
-            }
+            };
 
-        } catch (error: any) {
-            throw new CustomError(error.message, error.statusCode)
-
+        } catch (error: unknown) {
+            const err = error as CustomError;
+            throw new CustomError(err.message, err.statusCode);
         }
     },
 
@@ -103,4 +102,4 @@ export default {
             });
         });
     },
-}
+};

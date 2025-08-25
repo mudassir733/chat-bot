@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from "express";
-import authService from "../../services/auth/auth.service";
-import { CustomError } from "../../utils/custom_errors/api.error";
+import { Request, Response, NextFunction } from 'express';
+import authService from '../../services/auth/auth.service';
+import { CustomError } from '../../utils/custom_errors/api.error';
 
 
 
@@ -9,7 +9,7 @@ export default {
         try {
             const { username, email, password, } = req.body;
             const user = await authService.register(username, email, password);
-            console.log("RES", user);
+            console.log('RES', user);
             return res.json({
                 data: {
                     id: user.user.id,
@@ -20,12 +20,13 @@ export default {
                 },
                 status: 201
             });
-        } catch (error: any) {
+        } catch (error: unknown) {
             if (error instanceof CustomError) {
                 res.status(error.statusCode).json({ message: error.message });
 
             }
-            next(error.message);
+            const err = error as CustomError
+            next(err.message);
         }
     },
 
@@ -44,12 +45,13 @@ export default {
 
                 status: 200
             });
-        } catch (error: any) {
+        } catch (error: unknown) {
             if (error instanceof CustomError) {
                 res.status(error.statusCode).json({ message: error.message });
 
             }
-            next(error.message);
+            const err = error as CustomError
+            next(err.message);
 
         }
     },
@@ -70,4 +72,4 @@ export default {
         req.logout(() => res.redirect('/'));
     }
 
-}
+};

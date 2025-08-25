@@ -1,8 +1,9 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import session from "express-session";
+import session from 'express-session';
 import './config/passport';
+import passport from 'passport';
 dotenv.config();
 
 // routers
@@ -15,16 +16,20 @@ const app = express();
 
 // cors
 app.use(cors({
-    origin: 'http://localhost:3000',
-    methods: ["GET", "POST", 'PUT', 'DELETE']
+  origin: 'http://localhost:3000',
+  methods: ['GET', 'POST', 'PUT', 'DELETE']
 }));
 
 app.use(session({
-    secret: `${process.env.SESSION_SECRET}`,
-    resave: false,
-    saveUninitialized: true,
-    cookie: { maxAge: 60000 }
+  secret: `${process.env.SESSION_SECRET}`,
+  resave: false,
+  saveUninitialized: false,
+  cookie: { maxAge: 60000 }
 }));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 app.use(express.json());
 
@@ -36,4 +41,4 @@ app.use('/api', chatListRouter);
 // app.use("/api", require("./routes/chat.route").default);
 
 
-export { app }
+export { app };

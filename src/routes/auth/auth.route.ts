@@ -1,7 +1,7 @@
-import authController from "../../controller/auth/auth.controller";
+import authController from '../../controller/auth/auth.controller';
 import passport from 'passport';
-import dotenv from 'dotenv'
-import { Router } from "express";
+import dotenv from 'dotenv';
+import { Router } from 'express';
 
 dotenv.config();
 const authRouter = Router();
@@ -13,9 +13,9 @@ authRouter.post('/login', authController.login);
 authRouter.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
 authRouter.get(
-    '/google/callback',
-    passport.authenticate('google', { failureRedirect: '/login' }),
-    (req, res) => res.redirect(`${process.env.FRONTEND_REDIRECT_URI}`)
+  '/google/callback',
+  passport.authenticate('google', { failureRedirect: '/login' }),
+  (req, res) => res.redirect(`${process.env.FRONTEND_REDIRECT_URI}`)
 );
 
 authRouter.get('/success', authController.loginSuccess);

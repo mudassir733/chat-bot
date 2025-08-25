@@ -1,7 +1,7 @@
 interface ChatMessage {
-    role: "user" | "assistant";
+    role: 'user' | 'assistant';
     content: string;
   }
   
-  export const chatHistory: ChatMessage[] = [];
+export const chatHistory: ChatMessage[] = [];
   

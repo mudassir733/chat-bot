@@ -1,5 +1,5 @@
-import chatListController from "../../controller/chatList/chatList.controller";
-import { Router } from "express";
+import chatListController from '../../controller/chatList/chatList.controller';
+import { Router } from 'express';
 
 
 const chatListRouter = Router();
