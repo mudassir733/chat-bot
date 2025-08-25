@@ -1,5 +1,5 @@
 import { prisma } from '../../config/db';
-import { NotFoundError, ValidationError, CustomError, Error } from '../../utils/custom_errors/api.error';
+import { NotFoundError, ValidationError, CustomError } from '../../utils/custom_errors/api.error';
 
 export default {
   async createChatList(userId: string) {
@@ -59,7 +59,7 @@ export default {
 
       return chat;
     } catch (error: unknown) {
-      const err = error as CustomError
+      const err = error as CustomError;
       throw new CustomError(err.message, err.statusCode);
     }
 

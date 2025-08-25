@@ -26,6 +26,7 @@ export default defineConfig([
       '@typescript-eslint/consistent-type-definitions': ['error', 'interface'],
       semi: ['error', 'always'],
       quotes: ['error', 'single'],
+      indent: ['error', 2],
     },
 
   },

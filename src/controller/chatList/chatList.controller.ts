@@ -16,7 +16,7 @@ export default {
         res.status(error.statusCode).json({ message: error.message });
 
       }
-      const err = error as CustomError
+      const err = error as CustomError;
       next(err.message);
 
     }
