@@ -24,6 +24,7 @@ export default defineConfig([
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/consistent-type-definitions': ['error', 'interface'],
+      '@typescript-eslint/no-new-object': 'error',
       semi: ['error', 'always'],
       quotes: ['error', 'single'],
       indent: ['error', 2],

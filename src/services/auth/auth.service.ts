@@ -6,7 +6,6 @@ import bcrypt from 'bcrypt';
 import path from 'node:path';
 
 
-
 export default {
   async register(username: string, email: string, password: string) {
     try {
